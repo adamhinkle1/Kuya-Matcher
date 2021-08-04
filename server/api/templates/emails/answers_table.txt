@@ -1,0 +1,34 @@
+
+{% extends 'emails/base_email.html' %}
+
+{% block content %}
+    <h3>Congratulation! You are now paired!!</h3>
+    <p>Here are the answer for people you are paired with: </p>
+    <br>
+    <table class="center">
+
+        {% set n = result_list[0] | length %}
+        {% set littles_cnt = result_list | length %}
+
+        <tr>
+            <th>Question</th>
+            {% for j in range(littles_cnt-1) %}
+                <th>Person: {{j+1}}</th>
+            {% endfor %}
+        </tr>
+
+
+        {% for i in range(n) %}
+        <tr>
+            {% for one_list in result_list %}
+                <td>{{ one_list[i] }}</td>
+            {% endfor %}
+        </tr>
+
+        {% endfor %}
+
+
+    </table>
+
+
+{% endblock %}

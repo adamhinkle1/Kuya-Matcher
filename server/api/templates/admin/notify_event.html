@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Notify Event{% endblock %}
+
+{% block content %}
+{% from 'bootstrap/form.html' import render_form %}
+{{render_form(form) }}
+
+<!-- <script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script> -->
+{% endblock %}

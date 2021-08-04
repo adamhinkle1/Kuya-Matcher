@@ -1,0 +1,615 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Semi-Auto Grading Page{% endblock %}
+
+{% block content %}
+
+<section class="flex-container">
+
+
+
+
+
+    <section id="big-section" class="bar-rounded-colored">
+        <div class="bold text-center">Big</div>
+        <small>
+            <button type="button" id="previous-question">
+                Previous Question
+            </button>
+            <button type="button" id="next-question">
+                Next Question
+            </button>
+            <br>
+
+            <button type="button" id="previous-big-submission">
+                Previous Submission
+            </button>
+            <button type="button" id="next-big-submission">
+                Next Submission
+            </button>
+        </small>
+        <!-- <div id="big-container" data-url="" -->
+        <div id="big-container" data-url="/admin/question_set/big/next_submission/" data-previous_id="-1">
+
+            <div  class="bold text-center">
+                Submission ID: <span id="big-submission-id"></span>
+            </div>
+
+            <div class="darker">
+                NAME: <span id="big-submission-name" class="bold text-center"></span>
+            </div>
+
+            <div class="darker">
+                EMAIL: <span id="big-submission-email" class="bold text-center"></span>
+
+            </div>
+
+            <br>
+            <div id="big-question" class="bold text-center">
+
+            </div>
+            <br>
+
+            <div class="bar-rounded darker text-center">
+                <span id="big-response"></span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="top-section">
+        <div class="bold text-center">Top Choices</div>
+        <div id="top-choices-1" class="bar-rounded-colored">
+            <small class="float-right">
+                100% weight
+            </small>
+            <div class="bold text-center" id="top-choices-1-name">
+                Empty
+            </div>
+            <div class="bold" id="top-choices-1-response">
+                Empty
+            </div>
+        </div>
+
+        <div id="top-choices-2" class="bar-rounded-colored">
+            <small class="float-right">
+                80% weight
+            </small>
+            <div class="bold text-center" id="top-choices-2-name">
+                Empty
+            </div>
+            <div class="bold" id="top-choices-2-response">
+                Empty
+            </div>
+        </div>
+
+        <div id="top-choices-3" class="bar-rounded-colored">
+            <small class="float-right">
+                60% weight
+            </small>
+            <div class="bold text-center" id="top-choices-3-name">
+                Empty
+            </div>
+            <div class="bold" id="top-choices-3-response">
+                Empty
+            </div>
+        </div>
+
+        <div id="top-choices-4" class="bar-rounded-colored">
+            <small class="float-right">
+                40% weight
+            </small>
+            <div class="bold text-center" id="top-choices-4-name">
+                Empty
+            </div>
+            <div class="bold" id="top-choices-4-response">
+                Empty
+            </div>
+        </div>
+
+        <div id="top-choices-5" class="bar-rounded-colored">
+            <small class="float-right">
+                20% weight
+            </small>
+            <div class="bold text-center" id="top-choices-5-name">
+                Empty
+            </div>
+            <div class="bold" id="top-choices-5-response">
+                Empty
+            </div>
+        </div>
+
+    </section>
+
+    <section id="little-section" class="bar-rounded-colored">
+        <div class="bold text-center">Potential Choices</div>
+        <button type="button" id="previous-little-submission">
+            Previous Submission
+        </button>
+        <button type="button" id="next-little-submission">
+            Next Submission
+        </button>
+        <br>
+
+        <div id="rank-container" data-url="/admin/new_rank/">
+            <button type="button" id="rank-1">1</button>
+            <button type="button" id="rank-2">2</button>
+            <button type="button" id="rank-3">3</button>
+            <button type="button" id="rank-4">4</button>
+            <button type="button" id="rank-5">5</button>
+        </div>
+        <br>
+
+        <div id="little-container" data-url="/admin/question_set/little/next_submission/" data-previous_id="-1">
+            <div class="bold text-center">
+                Submission ID: <span id="little-submission-id"></span>
+            </div>
+
+            <div class="darker">
+                NAME: <span id="little-submission-name" class="bold text-center"></span>
+
+            </div>
+
+            <div class="darker">
+                EMAIL: <span id="little-submission-email" class="bold text-center"></span>
+            </div>
+
+            <br>
+            <div id="little-question" class="bold text-center">
+                question here
+            </div>
+            <br>
+
+            <div class="bar-rounded darker text-center">
+                <span id="little-response"></span>
+            </div>
+
+        </div>
+
+
+
+    </section>
+
+
+</section>
+
+<script type="text/javascript">
+            $(document).ready(function() {
+
+                console.log("semi page ready...");
+
+
+                $(document).ajaxError(function(event, request){
+                    var message = null;
+
+                    if (request.responseJSON && request.responseJSON.hasOwnProperty('message')){
+                        message = request.responseJSON.message;
+                    }else if (request.responseText){
+                        var IS_JSON = true;
+                        try{
+                            var data = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n'));
+                        }catch(err){
+                            IS_JSON = false;
+                        }
+
+                        if (IS_JSON && data != undefined && data.hasOwnProperty('message')){
+                            message = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n')).message;
+                        }else{
+                            //message = default_error_message;
+                            message = "error!!";
+                        }
+                    }else{
+                        message = default_error_message;
+                    }
+                    //output the message to the screen here
+                });
+
+
+                //set some default values
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            //xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                        }
+                    }
+                });
+
+
+                //initialize: get big submissions and save to attributes
+                switch_big_submission(1);
+                switch_little_submission(1);
+
+                //click event for big
+                $('#next-big-submission').click({'flag':1}, b_switch_big_submission);
+                $('#previous-big-submission').click({'flag': -1}, b_switch_big_submission);
+
+                function b_switch_big_submission(event){
+                    flag = event.data.flag;
+                    switch_big_submission(flag);
+                }
+
+                $('#next-little-submission').click({'flag':1}, b_switch_little_submission);
+                $('#previous-little-submission').click({'flag': -1}, b_switch_little_submission);
+
+                function b_switch_little_submission(event){
+                    flag = event.data.flag;
+                    switch_little_submission(flag);
+                }
+
+
+                function switch_big_submission(flag){
+
+                    console.log("flag is: " + flag);
+
+                    disable_big_submission_btns();
+
+                    var elem = document.getElementById("big-container");
+                    var previous_submission_id = elem.getAttribute('data-previous_id');
+
+                    var url = elem.getAttribute('data-url')+ flag + "/" + previous_submission_id;
+
+                    console.log("previous id: " + previous_submission_id);
+
+
+
+                    console.log(url);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url ,
+                        success: function(data){
+
+                            fs_questions = JSON.stringify(data);
+                            var q_length = Object.keys(data).length;
+                            console.log("--data is: ", data);
+
+
+                            //update attributes for big
+                            elem.setAttribute('data-previous_id', data['id']);
+                            elem.setAttribute('data-questions', fs_questions);
+                            elem.setAttribute('data-total', q_length);
+                            elem.setAttribute('data-q_idx', 0);
+
+                            first_q = JSON.parse(fs_questions.replace(/[\r]?[\n]/g, '\\n'))['0'];
+
+                            elem.setAttribute('data-weight', first_q['weight']);
+
+
+                            $('#big-submission-id').hide().html(data['id']).fadeIn(100);
+                            $('#big-submission-name').hide().html(data['name']).fadeIn(100);
+                            $('#big-submission-email').hide().html(data['email']).fadeIn(100);
+                            $('#big-question').hide().html(first_q['question']).fadeIn(100);
+                            $('#little-question').hide().html(first_q['question']).fadeIn(100);
+                            $('#big-response').hide().html(first_q['answer']).fadeIn(100);
+
+                            //update attributes for little
+                            try{
+                                var little_container = document.getElementById("little-container");
+                                var little_questions_raw = little_container.getAttribute('data-questions');
+                                var little_questions = JSON.parse(little_questions_raw.replace(/[\r]?[\n]/g, '\\n'));
+                                little_resp = little_questions["0"]['answer'];
+
+                                $('#little-response').hide().html(little_resp).fadeIn(100);
+
+                                var little_elem = document.getElementById("little-container");
+                                $('#little-submission-id').hide().html(little_elem.getAttribute('data-previous_id')).fadeIn(100);
+                            }catch(err){
+                                console.log("catch err: " + err);
+                            }
+
+                            //update the rank
+                            update_top_choices();
+
+                        },
+
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                            console.log("error: ", xhr.status, " , ", thrownError);
+                        },
+                        complete: function(){
+                            enable_big_submission_btns();
+                            update_top_choices();
+                        }
+                    });
+
+
+                }
+                function disable_big_submission_btns(){
+                    var btn1 = document.getElementById("previous-big-submission");
+                    var btn2 = document.getElementById("next-big-submission");
+
+                    //disable the button until complete
+                    btn1.setAttribute('disabled', true);
+                    btn2.setAttribute('disabled', true);
+                }
+
+                function enable_big_submission_btns(){
+                    var btn1 = document.getElementById("previous-big-submission");
+                    var btn2 = document.getElementById("next-big-submission");
+
+                    //disable the button until complete
+                    btn1.removeAttribute('disabled');
+                    btn2.removeAttribute('disabled');
+                }
+
+                function disable_little_submission_btns(){
+                    var btn1 = document.getElementById("previous-little-submission");
+                    var btn2 = document.getElementById("next-little-submission");
+
+                    //disable the button until complete
+                    btn1.setAttribute('disabled', true);
+                    btn2.setAttribute('disabled', true);
+                }
+
+                function enable_little_submission_btns(){
+                    console.log("reenable buttons: ");
+                    var btn1 = document.getElementById("previous-little-submission");
+                    var btn2 = document.getElementById("next-little-submission");
+
+                    //reenable the button
+                    btn1.removeAttribute('disabled');
+                    btn2.removeAttribute('disabled');
+
+                }
+
+                function switch_little_submission(flag){
+
+                    disable_little_submission_btns();
+                    var elem = document.getElementById("little-container");
+                    var previous_submission_id = elem.getAttribute('data-previous_id');
+
+
+                    //it happens when click too fast..
+                    /*
+                    if(typeof previous_submission_id == "undefined"){
+                        console.log("undefined detected...");
+                        return;
+                    }
+                    */
+                    if(previous_submission_id == "undefined"){
+                        console.log("it is undefined..");
+                        return;
+                    }
+
+
+                    var url = elem.getAttribute('data-url')+ flag + "/" + previous_submission_id;
+
+                    var big_elem = document.getElementById("big-container");
+
+                    console.log(url);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url ,
+                        success: function(data){
+                            console.log("--------success!!!!");
+
+                            fs_questions = JSON.stringify(data);
+                            var q_length = Object.keys(data).length;
+                            console.log("--little questions: ", fs_questions);
+
+
+                            //update attributes
+                            elem.setAttribute('data-previous_id', data['id']);
+                            elem.setAttribute('data-questions', fs_questions);
+                            elem.setAttribute('data-total', q_length);
+                            elem.setAttribute('data-q_idx', 0);
+
+                            //making sure little q is showing the answer to same question idx (0 at init)
+                            var big_q_idx = big_elem.getAttribute('data-q_idx');
+                            console.log("---before big q idx: ", big_q_idx);
+                            if (typeof big_q_idx == "undefined" || !big_q_idx){
+                                big_q_idx = 0;
+                                console.log("---middle big q idx: ", big_q_idx);
+                            }
+
+                            console.log("--final big q idx: ", big_q_idx);
+
+                            //first_q = JSON.parse(fs_questions.replace(/[\r]?[\n]/g, '\\n'))[parseInt(big_q_idx)];
+                            first_q = JSON.parse(fs_questions.replace(/[\r]?[\n]/g, '\\n'))[big_q_idx.toString()];
+                            //first_q = JSON.parse(fs_questions)["0"];
+
+                            $('#little-response').hide().html(first_q['answer']).fadeIn(100);
+                            $('#little-submission-id').hide().html(data['id']).fadeIn(100);
+                            $('#little-submission-name').hide().html(data['name']).fadeIn(100);
+                            $('#little-submission-email').hide().html(data['email']).fadeIn(100);
+
+                        },
+
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                            console.log("error");
+
+                        },
+
+                        complete: function(){
+                            //reenable buttons
+                            enable_little_submission_btns();
+                        }
+
+                    });
+
+
+                }
+
+
+
+
+                //$(document).on('click', '#next-question', switch_question);
+                $('#next-question').click({'flag':1}, switch_question);
+                $('#previous-question').click({'flag': -1}, switch_question);
+
+
+
+                //FIXME: update to next question for both big and little
+                function switch_question(event){
+                    //console.log("---next question");
+                    flag = event.data.flag;
+
+                    var big_container = document.getElementById("big-container");
+                    var big_questions_raw = big_container.getAttribute('data-questions');
+                    var big_questions = JSON.parse(big_questions_raw.replace(/[\r]?[\n]/g, '\\n'));
+                    var questions_length = parseInt(big_container.getAttribute('data-total').replace(/[\r]?[\n]/g, '\\n'));
+                    var question_idx = parseInt(big_container.getAttribute('data-q_idx').replace(/[\r]?[\n]/g, '\\n'));
+
+
+                    var little_container = document.getElementById("little-container");
+                    var little_questions_raw = little_container.getAttribute('data-questions');
+                    var little_questions = JSON.parse(little_questions_raw.replace(/[\r]?[\n]/g, '\\n'));
+
+
+                    var big_q = "";
+                    var little_q = "";
+                    var big_resp = "";
+                    var big_weight = 0;
+                    var little_weight = 0;
+
+                    if(flag > 0){
+                        if (question_idx < questions_length - 1){
+                            question_idx += 1;
+
+
+                            //do nothing if out of index
+                            try{
+                                big_q = big_questions[question_idx.toString()]['question'];
+                                big_resp = big_questions[question_idx.toString()]['answer'];
+                                big_weight = big_questions[question_idx.toString()]['weight'];
+
+                                //little usually has less question compare to big
+                                little_weight = little_questions[question_idx.toString()]['weight'];
+                                little_q = little_questions[question_idx.toString()]['question'];
+                                little_resp = little_questions[question_idx.toString()]['answer'];
+                            }catch(err){
+
+                            }
+
+                        }
+                    }else{
+                        if (question_idx > 0){
+                            question_idx -= 1;
+
+                            try{
+                                big_q = big_questions[question_idx.toString()]['question'];
+                                big_resp = big_questions[question_idx.toString()]['answer'];
+                                big_weight = big_questions[question_idx.toString()]['weight'];
+
+                                little_weight = little_questions[question_idx.toString()]['weight'];
+                                little_q = little_questions[question_idx.toString()]['question'];
+                                little_resp = little_questions[question_idx.toString()]['answer'];
+
+                            }catch(err){
+
+                            }
+
+                        }
+
+                    }
+
+
+                    if (big_q != ""){
+                        big_container.setAttribute('data-q_idx', question_idx.toString());
+                        big_container.setAttribute('data-weight', big_weight);
+
+
+                        $('#big-question').hide().html(big_q).fadeIn(100);
+                        $('#big-response').hide().html(big_resp).fadeIn(100);
+
+                        if(little_q != ""){
+                            little_container.setAttribute('data-q_idx', question_idx.toString());
+                            little_container.setAttribute('data-weight', little_weight);
+                            $('#little-question').hide().html(little_q).fadeIn(100);
+                            $('#little-response').hide().html(little_resp).fadeIn(100);
+                        }
+                    }
+
+
+                }
+
+
+
+                //the rank part
+                $('#rank-1').click({'rank':1}, new_rank);
+                $('#rank-2').click({'rank':2}, new_rank);
+                $('#rank-3').click({'rank':3}, new_rank);
+                $('#rank-4').click({'rank':4}, new_rank);
+                $('#rank-5').click({'rank':5}, new_rank);
+
+                function new_rank(event){
+                    var rank =  event.data.rank;
+
+                    //get little submission_id
+                    var little_elem = document.getElementById("little-container");
+                    var little_sub_id = little_elem.getAttribute('data-previous_id');
+
+                    //get big submission_id
+                    var big_elem = document.getElementById("big-container");
+                    var big_sub_id = big_elem.getAttribute('data-previous_id');
+                    var weight = big_elem.getAttribute('data-weight');
+
+                    var elem = document.getElementById("rank-container");
+
+                    var url = elem.getAttribute("data-url");
+                    url = url + big_sub_id + "/" + little_sub_id + "/" + rank.toString() + "/" + weight.toString();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function(data){
+                            console.log("updated rank");
+
+                            //update the rank part
+                            update_top_choices();
+                        }
+                    });
+
+                }
+
+                //setInterval(update_top_choices,3000);
+
+                function update_top_choices(){
+                    var big_elem = document.getElementById("big-container");
+                    var big_submission_id = big_elem.getAttribute("data-previous_id");
+                    var url = "/admin/top_choices/"+big_submission_id;
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function(data){
+                            //FIXME
+                            //$("#top-choices-1-name").hide().html(data['0']['little_submission_id'].toString()).fadeIn(100);
+                            $("#top-choices-1-name").hide().html(data['0']['id'].toString()).fadeIn(100);
+                            $("#top-choices-2-name").hide().html(data['1']['id'].toString()).fadeIn(100);
+                            $("#top-choices-3-name").hide().html(data['2']['id'].toString()).fadeIn(100);
+                            $("#top-choices-4-name").hide().html(data['3']['id'].toString()).fadeIn(100);
+                            $("#top-choices-5-name").hide().html(data['4']['id'].toString()).fadeIn(100);
+                            //$("#top-choices-2-name").hide().html(data['1']['little_submission_id'].toString()).fadeIn(100);
+                            //$("#top-choices-3-name").hide().html(data['2']['little_submission_id'].toString()).fadeIn(100);
+                            //$("#top-choices-4-name").hide().html(data['3']['little_submission_id'].toString()).fadeIn(100);
+                            //$("#top-choices-5-name").hide().html(data['4']['little_submission_id'].toString()).fadeIn(100);
+                        }
+                    });
+
+                }
+
+
+            });
+
+
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

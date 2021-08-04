@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Test Send Confirmation Email{% endblock %}
+
+{% block content %}
+    {% from 'bootstrap/form.html' import render_form %}
+    {{render_form(form) }}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<p>Hello {{name}}</p>
+<p>This a message from <b>Pilipino American Coalition</b>!</p>
+
+{% block note %}
+    Please DO NOT reply to this email, they will not be checked!!
+    ============================================================
+
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block additional_messages %} {% endblock %}
+
+{{timestamp}}

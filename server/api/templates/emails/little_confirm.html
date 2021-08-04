@@ -1,0 +1,9 @@
+{% extends 'emails/base_email.html' %}
+
+{% block content %}
+    <h3>You are paired!!</h3>
+{% endblock %}
+
+{% block additional_messages %}
+    <p>{{additional_messages | safe}}</p>
+{% endblock %}

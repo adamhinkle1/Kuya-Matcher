@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+    <div class="flex-container-home">
+        <div class="bar-rounded-colored text-center cursor-cell" id="big-container">
+            <div id="big-submissions-count" class="bold" style="font-size:1.2em">
+                Big Submissions: {{big_cnt}}
+            </div>
+            <hr>
+
+            <div id="big-drop-down" class="drop-down-content">
+                <a href="{{url_for('admin.download_big_submissions') }}">Download Big Submissions</a>
+                <a href="{{url_for('admin.download_big_question_set') }}">Download Big Question Set</a>
+                <a href="{{url_for('admin.big_question_set') }}">Current Big Question Set</a>
+                <a href="{{url_for('admin.update_big_question_set') }}">Update Big Question Set</a>
+            </div>
+
+        </div>
+
+        <div class="bar-rounded-colored text-center cursor-cell" id="little-container">
+            <div id="little-submissions-count" class="bold" style="font-size:1.2em">
+                Little Submissions: {{little_cnt}}
+            </div>
+            <hr>
+
+            <div id="little-drop-down" class="drop-down-content">
+                <a href="{{url_for('admin.download_little_submissions') }}">Download Little Submissions </a>
+                <a href="{{url_for('admin.download_little_question_set') }}">Download Little Question Set</a>
+                <a href="{{url_for('admin.little_question_set') }}">Current Little Question Set</a>
+                <a href="{{url_for('admin.update_little_question_set') }}">Update Little Question Set</a>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(document).on('click', '#big-submissions-count', function(){
+            $('#big-drop-down').toggleClass('hide');
+            $('#little-drop-down').toggleClass('hide');
+        });
+
+        $(document).on('click', '#little-submissions-count', function(){
+            $('#big-drop-down').toggleClass('hide');
+            $('#little-drop-down').toggleClass('hide');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions-Set: Little</title>
+</head>
+<body>
+    {% for question_type in questions_set %}
+        <h4>{{question_type}}</h4>
+        {%set questions = questions_set[question_type] %}
+
+        <!-- multiple choice questions -->
+        {% if question_type == "multiple_choice_questions" %}
+        <ol>
+            {% for one_question in questions %}
+            <li>
+                    {{one_question}}
+                    <ul>
+                        <li>
+                            {{questions[one_question]}}
+                        </li>
+                    </ul>
+
+
+            </li>
+            {% endfor %}
+        </ol>
+
+        <!-- free response questions -->
+        {% else %}
+            <ol>
+                {% for one_question in questions %}
+                <li>
+                    {{one_question}}
+                </li>
+                {% endfor %}
+
+            </ol>
+
+        {% endif %}
+
+
+
+
+
+
+    {% endfor %}
+
+</body>
+</html>

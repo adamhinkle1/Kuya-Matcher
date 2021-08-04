@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Remaining Little Submissions{% endblock %}
+
+{% block content %}
+
+    <div id="all-pairings" class="flex-container-w">
+        {% if all_pairings_json %}
+
+            {%for one_key in all_pairings_json %}
+
+                {%set one_little_json = all_pairings_json[one_key] %}
+
+            <div id="big-container" class="bar-rounded-colored clickable" data-id="{{one_big_id}}">
+
+                <div id="little-container">
+
+                    <div data-id="{{one_little_json['id'] }}" data-name="{{one_little_json['name'] }}">
+                        <div class="darker">ID: {{one_little_json['id'] }}</div>
+                        <!--
+                        <div>Name: {{one_little_json['name'] }}</div>
+                        -->
+
+                        <div>
+                            <span class="smaller bold"> Name: </span>  {{one_little_json['name']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Age: </span>  {{one_little_json['age']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Dept: </span>  {{one_little_json['major_dept']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Major: </span>  {{one_little_json['major']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Email: </span>  {{one_little_json['email']}}
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+
+    <script type="text/javascript">
+            var clicked_className = 'clicked-color';
+            $(document).ready(function() {
+
+                console.log("show all pairs page ready...");
+
+
+                $(document).ajaxError(function(event, request){
+                    var message = null;
+
+                    if (request.responseJSON && request.responseJSON.hasOwnProperty('message')){
+                        message = request.responseJSON.message;
+                    }else if (request.responseText){
+                        var IS_JSON = true;
+                        try{
+                            var data = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n'));
+                        }catch(err){
+                            IS_JSON = false;
+                        }
+
+                        if (IS_JSON && data != undefined && data.hasOwnProperty('message')){
+                            message = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n')).message;
+                        }else{
+                            //message = default_error_message;
+                            message = "error!!";
+                        }
+                    }else{
+                        message = default_error_message;
+                    }
+                    //output the message to the screen here
+                });
+
+
+                //set some default values
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            //xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                        }
+                    }
+                });
+
+
+
+                $(document).on('click', '.clickable', function(){
+
+
+                    if ($(this).hasClass(clicked_className)){
+                        $(this).removeClass(clicked_className);
+                    }else{
+                        $(this).addClass(clicked_className);
+
+                        var one_little_id = this.getAttribute('data-id');
+                        var one_little_name = this.getAttribute('data-name');
+
+                        console.log("--one little id: " + one_little_id + " ,one little name: " + one_little_name);
+
+                    }
+
+                });
+
+
+            });
+
+    </script>
+
+
+
+{% endblock %}

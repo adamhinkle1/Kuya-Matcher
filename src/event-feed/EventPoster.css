@@ -1,0 +1,46 @@
+.title {
+  padding-left: 25px;
+  padding-top: 15px;
+}
+.messageSender {
+  margin-top: 30px;
+  flex-direction: column;
+  border-radius: 15px;
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 5px 10px -7px rgba(0, 0, 0, 0.75),
+    5px 0px 10px -6px rgba(0, 0, 0, 0.75);
+  width: 100%;
+}
+.messageSender_input {
+  flex: 1;
+  height: 40px;
+  width: 50%;
+}
+.messageSender_top {
+  display: flex;
+  padding: 20px 15px;
+}
+.messageSender_top > form {
+  flex: 1;
+  display: flex;
+}
+.messageSender_top > form > input {
+  outline-width: 0;
+  border: none;
+  padding: 5px 20px;
+  margin: 0 10px;
+  border-radius: 10px;
+  background-color: whitesmoke;
+}
+.messageSender_top > form > input:hover {
+  background-color: rgb(230, 230, 230);
+}
+
+.messageSender_top > form > button {
+  display: none;
+}
+.messageSender_img {
+  margin-right: 15px;
+  width: 90px;
+}

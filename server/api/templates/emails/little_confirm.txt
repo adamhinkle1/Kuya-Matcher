@@ -1,0 +1,9 @@
+{% extends 'emails/base_email.txt' %}
+
+{% block content %}
+    You are paired!!
+{% endblock %}
+
+{% block additional_messages %}
+    {{additional_messages}}
+{% endblock %}

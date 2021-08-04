@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Show All Paired Submissions{% endblock %}
+
+{% block content %}
+
+    <div class="fixed-right" style="margin-right: 0.5%; margin-top: 5%">
+        <button type="button" id="email-format" class="btn float-right">
+            Email Format
+        </button>
+
+    </div>
+
+
+    <div id="all-pairings" class="flex-container-w">
+        {% if all_pairings_json %}
+
+            {%for one_big_id in all_pairings_json %}
+
+                {%set one_combined_info = all_pairings_json[one_big_id] %}
+                {%set big_info_json = one_combined_info['big_info'] %}
+                {%set littles_info_json = one_combined_info['little_info'] %}
+
+            <div id="big-container" class="bar-rounded-colored clickable" data-id="{{one_big_id}}" data-url="/admin/email_format/confirm_email/">
+
+                <div class="bold text-center">Big ID: {{one_big_id}}</div>
+                <div>
+                    <div>
+                        <span class="smaller bold"> Name: </span>  {{big_info_json['name']}}
+                    </div>
+                    <div>
+                        <span class="smaller bold"> Age: </span>  {{big_info_json['age']}}
+                    </div>
+                    <div>
+                        <span class="smaller bold"> Dept: </span>  {{big_info_json['major_dept']}}
+                    </div>
+                    <div>
+                        <span class="smaller bold"> Major: </span>  {{big_info_json['major']}}
+                    </div>
+                    <div>
+                        <span class="smaller bold"> Email: </span>  {{big_info_json['email']}}
+                    </div>
+                    <div>
+                        <span class="smaller bold"> Email Sent: </span>  {{big_info_json['email_sent']}}
+                    </div>
+                </div>
+
+                <hr>
+
+                <div id="little-container">
+                {% for one_rank in littles_info_json %}
+
+                    {% set one_little_json = littles_info_json[one_rank] %}
+                    <div data-id="{{one_little_json['id'] }}" data-name="{{one_little_json['name'] }}">
+                        <div class="darker">ID: {{one_little_json['id'] }}</div>
+                        <!--
+                        <div>Name: {{one_little_json['name'] }}</div>
+                        -->
+
+                        <div>
+                            <span class="smaller bold"> Name: </span>  {{one_little_json['name']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Age: </span>  {{one_little_json['age']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Dept: </span>  {{one_little_json['major_dept']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Major: </span>  {{one_little_json['major']}}
+                        </div>
+                        <div>
+                            <span class="smaller bold"> Email: </span>  {{one_little_json['email']}}
+                        </div>
+
+                        <div>
+                            <span class="smaller bold"> Email Sent: </span>  {{one_little_json['email_sent']}}
+                        </div>
+
+
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+
+    <script type="text/javascript">
+            var clicked_className = 'clicked-color';
+            $(document).ready(function() {
+
+                console.log("show all pairs page ready...");
+
+
+                $(document).ajaxError(function(event, request){
+                    var message = null;
+
+                    if (request.responseJSON && request.responseJSON.hasOwnProperty('message')){
+                        message = request.responseJSON.message;
+                    }else if (request.responseText){
+                        var IS_JSON = true;
+                        try{
+                            var data = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n'));
+                        }catch(err){
+                            IS_JSON = false;
+                        }
+
+                        if (IS_JSON && data != undefined && data.hasOwnProperty('message')){
+                            message = JSON.parse(request.responseText.replace(/[\r]?[\n]/g, '\\n')).message;
+                        }else{
+                            //message = default_error_message;
+                            message = "error!!";
+                        }
+                    }else{
+                        message = default_error_message;
+                    }
+                    //output the message to the screen here
+                });
+
+
+                //set some default values
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            //xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                        }
+                    }
+                });
+
+
+
+                $(document).on('click', '.clickable', function(){
+
+
+                    if ($(this).hasClass(clicked_className)){
+                        $(this).removeClass(clicked_className);
+                    }else{
+                        $(this).addClass(clicked_className);
+
+                        var one_little_id = this.getAttribute('data-id');
+                        var one_little_name = this.getAttribute('data-name');
+
+                        console.log("--one little id: " + one_little_id + " ,one little name: " + one_little_name);
+
+                    }
+
+                });
+
+                /*
+                var clickable_suggestions = document.getElementsByClassName("clickable");
+
+                for (var i = 0; i < clickable_suggestions.length; i++){
+                    clickable_suggestions[i].addEventListener('click', myFunction, false);
+                }
+                */
+
+                $(document).on('click', '#email-format', function(){
+                    var choice = confirm("Open a new tab to check/copy the email format?");
+
+                    if(choice){
+
+                        var selected_pairs = document.getElementsByClassName(clicked_className);
+                        if (selected_pairs.length <= 0){
+                            alert("None is selected!");
+                            return;
+                        }
+
+                        var one_big_id = selected_pairs[0].getAttribute('data-id');
+                        //var url = "/admin/email_format/confirm_email/" + one_big_id;
+                        var url = selected_pairs[0].getAttribute('data-url') + one_big_id;
+
+                        console.log("--url: ", url);
+
+                        $.ajax({
+                            type: 'GET',
+                            url: url ,
+
+                            success: function(data){
+                                    var w = window.open('about:blank');
+                                    w.document.open();
+                                    w.document.write(data);
+                                    w.document.close();
+
+
+                            },
+
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                console.log("error: ", xhr.status, " , ", thrownError);
+                            },
+                            complete: function(){
+                            }
+
+                        });
+
+
+                    }
+
+
+
+
+
+                });
+
+
+
+
+
+
+            });
+
+    </script>
+
+
+
+{% endblock %}

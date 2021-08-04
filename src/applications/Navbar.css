@@ -1,0 +1,66 @@
+.menu-bars {
+  font-size: 3rem;
+  background: none;
+  transition: 200ms;
+}
+.menu-bars.active {
+  font-size: 0.01rem;
+  transition: 250ms;
+}
+.menu-x {
+  position: relative;
+  margin-top: 10px;
+  font-size: 0.3rem;
+  background: none;
+  transition: 300ms;
+}
+.menu-x.active {
+  position: relative;
+  font-size: 3rem;
+  transition: 500ms;
+}
+.nav-menu {
+  background-color: rgba(0, 0, 0, 0.65);
+  width: 205px;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  transition: 600ms;
+}
+
+.nav-menu.active {
+  left: 0px;
+  transition: 400ms;
+}
+
+.nav-text {
+  list-style: none;
+  padding: 1vh 0vw;
+}
+
+.nav-text a {
+  position: relative;
+  left: -16px;
+  flex-grow: 1;
+  text-decoration: none;
+  color: whitesmoke;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 0.1px solid rgba(255, 255, 255, 0.7);
+}
+
+.nav-text a:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.nav-menu-items {
+  flex-grow: 1;
+}
+
+.navbar-toggle {
+  list-style: none;
+  display: flex;
+}

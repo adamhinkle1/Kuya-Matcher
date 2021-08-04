@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+          text-align: left;
+        }
+        table.center {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        table tr:nth-child(even){
+            background-color: #f2f2f2
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        .center {
+            margin: auto;
+
+        }
+
+        .text-center{
+            text-align: center;
+        }
+
+        </style>
+    </head>
+
+    <body class="text-center">
+
+
+        <h3>Hello {{name}}</h3>
+        <p>This a message from <b>Pilipino American Coalition</b>!</p>
+
+        {% block note %}
+        <div>
+            Please DO NOT reply to this email, they will not be checked!!
+        </div>
+        {% endblock %}
+
+        <hr>
+        <br>
+        {% block content %}{% endblock %}
+
+        {% block additional_messages %} {% endblock %}
+
+        <section>
+            <small class="timestamp">
+                {{timestamp}}
+            </small>
+        </section>
+
+
+    </body>
+
+</html>

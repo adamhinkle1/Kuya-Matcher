@@ -1,0 +1,64 @@
+
+<div id="suggestions-container" class="text-center" data-suggestions="{{suggestions_json}}">
+    <div class="bold">Top Choices</div>
+
+    <br>
+    <button type="button" id="suggestions-confirm-pairing" class="btn" data-url="{{url_for('admin.confirm_pairing')}}">
+        Confirm The Pairing
+    </button>
+
+    <hr>
+
+    {% if suggestions and suggestions['suggestions'] %}
+
+        {% for one_key in suggestions['suggestions'] %}
+            {% if one_key.isnumeric() %}
+
+                {% set json_body = suggestions['suggestions'][one_key] %}
+
+                <div id="top-choice-{{one_key}}" class="bar-rounded-colored clickable" data-json="{{json_body}}" data-big_id="{{suggestions['big_submission_id'] }}" data-id="{{json_body['id']}}" data-rank="{{one_key}}">
+
+                    <div class="bold text-left">
+                        ID: <span class="text-left">{{json_body['id']}}</span> RANK: <span>{{one_key}}</span>
+                    </div>
+
+                    <div class="bold text-left" id="top-choices-{{one_key}}-name">
+                        <span class="small bold">NAME:  </span> {{json_body['name']}}
+                    </div>
+
+                    <div class="bold text-left" id="top-choices-{{one_key}}-age">
+                        <span class="small bold">AGE:  </span> {{json_body['age']}}
+                    </div>
+
+                    <div class="bold text-left" id="top-choices-{{one_key}}-major-dept">
+                        <span class="small bold">DEPT:  </span> {{json_body['major_dept']}}
+                    </div>
+
+                    <div class="bold text-left" id="top-choices-{{one_key}}-major">
+                        <small class="small bold">MAJOR:  </small> {{json_body['major']}}
+                    </div>
+
+                    <!--
+                    <div class="bold" id="top-choices-{{one_key}}-email">
+                        <small> {{json_body['email']}} </small>
+                    </div>
+                    -->
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+</div>
+
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            //var elem = document.getElementById("database-status-progress-bar");
+            //elem.style.backgroundColor = "blue";
+            //var percent = elem.getAttribute('data-value') / elem.getAttribute('data-max');
+            //elem.style.width = percent + "%";
+        });
+    </script>

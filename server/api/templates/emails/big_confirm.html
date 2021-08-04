@@ -1,0 +1,16 @@
+{% extends 'emails/base_email.html' %}
+
+{% block content %}
+    <h3>You are paired!!</h3>
+    <p>Your Pairings:</p>
+        <ul>
+            <li>The first</li>
+            <li>The second</li>
+            <li>The second</li>
+        </ul>
+{% endblock %}
+
+{% block additional_messages %}
+    <p>{{additional_messages}}</p>
+
+{% endblock %}
